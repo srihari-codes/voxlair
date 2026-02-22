@@ -13,8 +13,26 @@
   --red: #ef4444;
   --text: #f1f5f9;
   --muted: #94a3b8;
-  --tile-radius: 16px;
-  --ctrl-h: 84px;
+  --tile-radius: 12px;
+  --header-h: 52px;
+  --ctrl-h: 80px;
+
+  /* PiP sizing */
+  --pip-w: 200px;
+  --pip-h: 125px;
+  --pip-gap: 14px;
+}
+
+/* Smaller PiP on narrow screens */
+@media (max-width: 480px) {
+  :root {
+    --pip-w: 110px;
+    --pip-h: 72px;
+    --pip-gap: 8px;
+    --header-h: 46px;
+    --ctrl-h: 68px;
+    --tile-radius: 8px;
+  }
 }
 
 html, body, #root {
@@ -27,23 +45,25 @@ html, body, #root {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ─── App shell ────────────────────────────────────────────────────────── */
+/* ─── App shell ─────────────────────────────────────────────────────────── */
 .app {
-  height: 100vh;
+  height: 100dvh;          /* dynamic viewport for mobile */
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--bg);
 }
 
-/* ─── Permission / Landing screen ─────────────────────────────────────── */
+/* ─── Permission / Landing screen ──────────────────────────────────────── */
 .permission-screen {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: radial-gradient(ellipse at 20% 50%, #1a0a2e 0%, var(--bg) 60%);
+  padding: 16px;
 }
 
 /* Animated blobs */
@@ -53,22 +73,26 @@ html, body, #root {
   filter: blur(80px);
   opacity: 0.35;
   animation: blobFloat 8s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 .blob-1 {
-  width: 520px; height: 520px;
+  width: clamp(200px, 50vw, 520px);
+  height: clamp(200px, 50vw, 520px);
   background: radial-gradient(circle, var(--accent), transparent 70%);
   top: -160px; left: -160px;
   animation-duration: 9s;
 }
 .blob-2 {
-  width: 400px; height: 400px;
+  width: clamp(180px, 40vw, 400px);
+  height: clamp(180px, 40vw, 400px);
   background: radial-gradient(circle, var(--accent2), transparent 70%);
   bottom: -100px; right: -80px;
   animation-duration: 11s;
   animation-delay: -3s;
 }
 .blob-3 {
-  width: 280px; height: 280px;
+  width: clamp(140px, 28vw, 280px);
+  height: clamp(140px, 28vw, 280px);
   background: radial-gradient(circle, var(--accent3), transparent 70%);
   top: 50%; right: 30%;
   animation-duration: 13s;
@@ -88,9 +112,9 @@ html, body, #root {
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--border);
   border-radius: 28px;
-  padding: 48px 52px;
+  padding: clamp(28px, 5vw, 48px) clamp(20px, 5vw, 52px);
   max-width: 480px;
-  width: 90%;
+  width: 100%;
   text-align: center;
   box-shadow: 0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(108,99,255,0.15);
 }
@@ -109,7 +133,7 @@ html, body, #root {
 .perm-icon svg { width: 36px; height: 36px; }
 
 .perm-title {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
   font-weight: 700;
   background: linear-gradient(135deg, #fff 30%, var(--accent2));
   -webkit-background-clip: text;
@@ -121,7 +145,7 @@ html, body, #root {
 
 .perm-subtitle {
   color: var(--muted);
-  font-size: 1rem;
+  font-size: clamp(0.88rem, 3vw, 1rem);
   line-height: 1.6;
   margin-bottom: 28px;
 }
@@ -181,7 +205,6 @@ html, body, #root {
 }
 .join-btn:active:not(:disabled) { transform: translateY(0); }
 .join-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
 .join-btn.connecting { background: linear-gradient(135deg, #4a4a6a, #6a4a8a); }
 
 .spinner {
@@ -199,17 +222,18 @@ html, body, #root {
   color: #4a5270;
 }
 
-/* ─── Call header ──────────────────────────────────────────────────────── */
+/* ─── Call header ───────────────────────────────────────────────────────── */
 .call-header {
-  height: 56px;
+  height: var(--header-h);
   flex-shrink: 0;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  gap: 12px;
+  padding: 0 16px;
+  gap: 8px;
+  z-index: 100;
 }
 
 .call-logo {
@@ -217,19 +241,19 @@ html, body, #root {
   align-items: center;
   gap: 8px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: clamp(0.88rem, 3vw, 1rem);
   color: var(--text);
   background: linear-gradient(135deg, var(--accent), var(--accent2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.call-logo svg { color: var(--accent); -webkit-text-fill-color: initial; }
+.call-logo svg { color: var(--accent); -webkit-text-fill-color: initial; flex-shrink: 0; }
 
 .call-meta {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .live-badge {
@@ -242,6 +266,7 @@ html, body, #root {
   border-radius: 6px;
   padding: 3px 8px;
   animation: livePulse 2s ease-in-out infinite;
+  white-space: nowrap;
 }
 @keyframes livePulse {
   0%, 100% { opacity: 1; }
@@ -249,77 +274,278 @@ html, body, #root {
 }
 
 .participant-count {
-  font-size: 0.85rem;
+  font-size: clamp(0.75rem, 2.5vw, 0.85rem);
   color: var(--muted);
   font-weight: 500;
+  white-space: nowrap;
 }
 
-/* ─── Call main area ───────────────────────────────────────────────────── */
+/* ─── Call main area ─────────────────────────────────────────────────────── */
 .call-main {
   flex: 1;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 16px 8px;
   position: relative;
   background: var(--bg);
+  overflow: hidden;
 }
 
-/* ─── Video grid ───────────────────────────────────────────────────────── */
-.video-grid {
-  display: grid;
+/* ────────────────────────────────────────────────────────────────────────────
+   LAYOUT 1: SOLO (only me)
+   ──────────────────────────────────────────────────────────────────────── */
+.vg-solo {
   width: 100%;
   height: 100%;
-  gap: 10px;
-  max-height: calc(100vh - 56px - var(--ctrl-h) - 24px);
+  padding: 10px;
+}
+.vg-solo .video-tile {
+  width: 100%;
+  height: 100%;
 }
 
-/* Layout rules based on participant count */
-.video-grid[data-count="1"] {
-  grid-template-columns: 1fr;
+/* ────────────────────────────────────────────────────────────────────────────
+   LAYOUT 2: SPOTLIGHT + PiP   (2 participants)
+   Main remote fills the stage; local is a floating PiP corner tile.
+   ──────────────────────────────────────────────────────────────────────── */
+.vg-spotlight-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
-.video-grid[data-count="2"] {
+
+.vg-spotlight {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+.vg-spotlight .video-tile {
+  width: 100%;
+  height: 100%;
+  cursor: default;
+}
+
+/* PiP tile — bottom-right corner */
+.vg-pip {
+  position: absolute;
+  bottom: var(--pip-gap);
+  right: var(--pip-gap);
+  width: var(--pip-w);
+  height: var(--pip-h);
+  z-index: 30;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.7));
+  transition: transform 0.2s, width 0.2s, height 0.2s;
+}
+.vg-pip:hover {
+  transform: scale(1.04);
+}
+.vg-pip .video-tile {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+.vg-pip .video-tile:active {
+  cursor: grabbing;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   LAYOUT 3: PINNED / SPOTLIGHT  (3+ participants, someone pinned)
+   Big main video + horizontal thumbnail strip at the bottom.
+   ──────────────────────────────────────────────────────────────────────── */
+.vg-pinned-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+}
+
+/* Main spotlight area takes remaining height */
+.vg-pinned-main {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+.vg-pinned-main .video-tile {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* Bottom thumbnail strip */
+.vg-strip {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface2) transparent;
+  padding-bottom: 4px;
+  /* Height adapts to screen */
+  height: clamp(72px, 18vh, 150px);
+}
+.vg-strip::-webkit-scrollbar { height: 4px; }
+.vg-strip::-webkit-scrollbar-track { background: transparent; }
+.vg-strip::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 2px; }
+
+.vg-strip-tile {
+  flex-shrink: 0;
+  height: 100%;
+  aspect-ratio: 16/9;
+  cursor: pointer;
+}
+.vg-strip-tile .video-tile {
+  width: 100%;
+  height: 100%;
+}
+
+/* On portrait mobile, strip goes on the right side instead */
+@media (max-width: 600px) and (orientation: portrait) {
+  .vg-pinned-container {
+    flex-direction: row;
+    padding: 6px;
+    gap: 6px;
+  }
+  .vg-pinned-main {
+    flex: 1;
+  }
+  .vg-strip {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    width: clamp(68px, 28vw, 110px);
+    padding-bottom: 0;
+    padding-right: 4px;
+  }
+  .vg-strip-tile {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 9/16;
+    flex-shrink: 0;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   LAYOUT 4: GRID (3+ participants, no pin)
+   Auto-fits columns based on count, similar to Google Meet.
+   ──────────────────────────────────────────────────────────────────────── */
+.vg-grid {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+}
+
+/* ── Column/row templates by count ── */
+.vg-grid[data-count="2"] {
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
 }
-.video-grid[data-count="3"],
-.video-grid[data-count="4"] {
+.vg-grid[data-count="3"] {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
 }
-.video-grid[data-count="5"],
-.video-grid[data-count="6"] {
+.vg-grid[data-count="3"] .video-tile:first-child {
+  grid-column: 1 / -1;
+}
+.vg-grid[data-count="4"] {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.vg-grid[data-count="5"],
+.vg-grid[data-count="6"] {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
 }
-.video-grid[data-count="7"],
-.video-grid[data-count="8"],
-.video-grid[data-count="9"] {
+.vg-grid[data-count="7"],
+.vg-grid[data-count="8"],
+.vg-grid[data-count="9"] {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
 }
 
-/* ─── Video tile ───────────────────────────────────────────────────────── */
+/* ── Mobile: portrait stacking ── */
+@media (max-width: 600px) and (orientation: portrait) {
+  .vg-grid[data-count="2"] {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .vg-grid[data-count="3"] {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+  }
+  .vg-grid[data-count="3"] .video-tile:first-child {
+    grid-column: auto;
+  }
+  .vg-grid[data-count="4"] {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .vg-grid[data-count="5"],
+  .vg-grid[data-count="6"] {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+  .vg-grid[data-count="7"],
+  .vg-grid[data-count="8"],
+  .vg-grid[data-count="9"] {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+  }
+}
+
+/* ── Landscape tablet ── */
+@media (min-width: 601px) and (max-width: 900px) {
+  .vg-grid[data-count="5"],
+  .vg-grid[data-count="6"] {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+}
+
+/* ─── Video tile (shared for all layouts) ───────────────────────────────── */
 .video-tile {
   position: relative;
   border-radius: var(--tile-radius);
   overflow: hidden;
   background: var(--surface2);
   border: 1px solid var(--border);
-  transition: border-color 0.3s, box-shadow 0.3s;
-  animation: tileIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+  animation: tileIn 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  cursor: pointer;
+  /* Ensure tile takes its parent's full size (flex/grid children) */
+  min-width: 0;
+  min-height: 0;
 }
 @keyframes tileIn {
   from { opacity: 0; transform: scale(0.88); }
   to   { opacity: 1; transform: scale(1); }
 }
+
+/* -- Hover state ── */
 .video-tile:hover {
-  border-color: rgba(108,99,255,0.4);
-  box-shadow: 0 0 0 2px rgba(108,99,255,0.15);
+  border-color: rgba(108,99,255,0.45);
+  box-shadow: 0 0 0 2px rgba(108,99,255,0.18), 0 8px 24px rgba(0,0,0,0.4);
 }
+
+/* -- Local tile ── */
 .video-tile.local {
-  border-color: rgba(108,99,255,0.5);
+  border-color: rgba(108,99,255,0.55);
+}
+
+/* -- Pinned tile (spotlight) ── */
+.video-tile.pinned {
+  border-color: rgba(6,182,212,0.6);
+  box-shadow: 0 0 0 2px rgba(6,182,212,0.25), 0 12px 36px rgba(0,0,0,0.5);
+}
+
+/* -- Floating tile (PiP) ── */
+.video-tile.floating {
+  border-color: rgba(168,85,247,0.5);
+  border-radius: 10px;
 }
 
 .video-el {
@@ -330,62 +556,113 @@ html, body, #root {
   background: #0d0d1a;
 }
 
-/* Mirror only the local tile */
+/* Mirror local tile */
 .video-tile.local .video-el {
   transform: scaleX(-1);
 }
 
-.tile-label {
+/* ── Hover overlay with expand/pin icon ── */
+.tile-overlay {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  inset: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(8px);
+  justify-content: center;
+  background: rgba(0,0,0,0);
+  transition: background 0.2s;
+  pointer-events: none;
+}
+.video-tile:hover .tile-overlay {
+  background: rgba(0,0,0,0.22);
+}
+
+.tile-expand-icon {
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.2s, transform 0.2s;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
   border-radius: 8px;
-  padding: 4px 10px;
-  font-size: 0.78rem;
+  padding: 8px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tile-expand-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.video-tile:hover .tile-expand-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+/* Don't show expand icon on PiP tile */
+.video-tile.floating .tile-overlay { display: none; }
+
+/* ── Name label ── */
+.tile-label {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0,0,0,0.58);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 7px;
+  padding: 3px 9px;
+  font-size: clamp(0.65rem, 2vw, 0.78rem);
   font-weight: 500;
   color: #fff;
   letter-spacing: 0.01em;
+  max-width: calc(100% - 16px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 .status-dot {
-  width: 7px; height: 7px;
+  width: 6px; height: 6px;
   background: var(--green);
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: 0 0 6px var(--green);
+  box-shadow: 0 0 5px var(--green);
 }
 
 .you-badge {
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   background: var(--accent);
   border-radius: 4px;
   padding: 1px 5px;
   font-weight: 600;
   letter-spacing: 0.04em;
+  flex-shrink: 0;
 }
 
-/* ─── Waiting hint ─────────────────────────────────────────────────────── */
+/* ─── Waiting hint ──────────────────────────────────────────────────────── */
 .waiting-hint {
   position: absolute;
-  bottom: 20px;
+  bottom: calc(var(--ctrl-h) + 16px);
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(18,18,26,0.85);
+  background: rgba(18,18,26,0.88);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 10px 20px;
-  font-size: 0.85rem;
+  padding: 9px 18px;
+  font-size: clamp(0.78rem, 2.5vw, 0.85rem);
   color: var(--muted);
   white-space: nowrap;
   display: flex;
   align-items: center;
   gap: 10px;
+  z-index: 50;
+  max-width: calc(100vw - 32px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .pulse-ring {
@@ -408,31 +685,32 @@ html, body, #root {
   to   { opacity: 0; transform: scale(1.8); }
 }
 
-/* ─── Controls bar ─────────────────────────────────────────────────────── */
+/* ─── Controls bar ──────────────────────────────────────────────────────── */
 .controls-bar {
   height: var(--ctrl-h);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: clamp(6px, 2vw, 12px);
   background: var(--surface);
   border-top: 1px solid var(--border);
-  padding: 0 24px;
+  padding: 0 clamp(8px, 3vw, 24px);
+  z-index: 100;
 }
 
 .ctrl-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 12px;
   color: var(--text);
   cursor: pointer;
-  padding: 10px 18px;
-  min-width: 72px;
+  padding: clamp(7px, 2vw, 10px) clamp(10px, 3vw, 18px);
+  min-width: clamp(54px, 15vw, 72px);
   transition: background 0.18s, border-color 0.18s, transform 0.15s, box-shadow 0.15s;
   font-family: inherit;
 }
@@ -464,19 +742,26 @@ html, body, #root {
 }
 
 .ctrl-label {
-  font-size: 0.7rem;
+  font-size: clamp(0.58rem, 1.8vw, 0.7rem);
   font-weight: 500;
   letter-spacing: 0.02em;
 }
 
 .ctrl-divider {
   width: 1px;
-  height: 40px;
+  height: 36px;
   background: var(--border);
-  margin: 0 4px;
+  margin: 0 2px;
+  flex-shrink: 0;
 }
 
-/* ─── Scrollbar ────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; }
+/* Hide labels on very small screens */
+@media (max-width: 360px) {
+  .ctrl-label { display: none; }
+  .ctrl-btn   { gap: 0; padding: 10px 12px; min-width: 44px; }
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
