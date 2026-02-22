@@ -21,16 +21,12 @@ export default function PermissionScreen({ onJoin, status, error }) {
           </svg>
         </div>
 
-        <h1 className="perm-title">VideoRoom</h1>
+        <h1 className="perm-title">Voxlair</h1>
         <p className="perm-subtitle">
           One room. Anyone who visits is instantly in the call.
         </p>
 
         <ul className="perm-features">
-          <li>
-            <span className="feat-icon">🔒</span>
-            Peer-to-peer — no server sees your video
-          </li>
           <li>
             <span className="feat-icon">⚡</span>
             No sign-up, no install — just press join
