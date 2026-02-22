@@ -33,8 +33,8 @@ peerServer.on('disconnect', (client) => {
 const distPath = join(__dirname, 'dist');
 if (existsSync(distPath)) {
   app.use(express.static(distPath));
-  // SPA fallback — serve index.html for any route not matched above
-  app.get('*', (_req, res) => {
+  // SPA fallback — serve index.html for any route not matched above (Express 5 syntax)
+  app.get('/{*splat}', (_req, res) => {
     res.sendFile(join(distPath, 'index.html'));
   });
   console.log(`[Server] Serving static files from ${distPath}`);
