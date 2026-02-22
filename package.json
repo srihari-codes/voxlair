@@ -1,0 +1,29 @@
+{
+  "name": "video-call",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"node server.js\"",
+    "build": "vite build",
+    "start": "node server.js",
+    "preview": "vite preview"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "concurrently": "^9.2.1",
+    "express": "^5.2.1",
+    "peer": "^1.0.2",
+    "peerjs": "^1.5.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.2.0"
+  }
+}
